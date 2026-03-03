@@ -82,3 +82,16 @@ contract MixITMeme is ERC20, Ownable {
         uint256 netAmount = amount - taxAmount - burnAmount;
         super._transfer(from, to, netAmount);
         if (taxAmount > 0 && taxReceiver != address(0)) {
+            super._transfer(from, taxReceiver, taxAmount);
+        }
+        if (burnAmount > 0) {
+            super._burn(from, burnAmount);
+            emit TokensBurned(from, burnAmount);
+        }
+    }
+
+    function burn(uint256 amount) external {
+        _burn(msg.sender, amount);
+        emit TokensBurned(msg.sender, amount);
+    }
+}
