@@ -12,3 +12,17 @@ contract MixITMeme is ERC20, Ownable {
     event TaxBpsUpdated(uint256 previousBps, uint256 newBps);
     event BurnBpsUpdated(uint256 previousBps, uint256 newBps);
     event TaxExemptSet(address indexed account, bool exempt);
+    event TaxReceiverUpdated(address indexed previousReceiver, address indexed newReceiver);
+    event TradingToggled(bool enabled);
+    event TokensBurned(address indexed from, uint256 amount);
+
+    error MIM_ZeroAddress();
+    error MIM_ZeroAmount();
+    error MIM_TradingDisabled();
+    error MIM_MaxTaxExceeded();
+    error MIM_MaxBurnExceeded();
+    error MIM_TransferFailed();
+
+    uint256 public constant MIM_BPS_DENOM = 10000;
+    uint256 public constant MIM_MAX_TAX_BPS = 1000;
+    uint256 public constant MIM_MAX_BURN_BPS = 500;
