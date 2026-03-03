@@ -26,3 +26,17 @@ contract MixITMeme is ERC20, Ownable {
     uint256 public constant MIM_BPS_DENOM = 10000;
     uint256 public constant MIM_MAX_TAX_BPS = 1000;
     uint256 public constant MIM_MAX_BURN_BPS = 500;
+    uint256 public constant MIM_TOTAL_SUPPLY = 420_690_000_000 * 1e18;
+
+    address public immutable taxReceiver;
+    uint256 public taxBps;
+    uint256 public burnBps;
+    bool public tradingEnabled;
+    mapping(address => bool) public isTaxExempt;
+
+    constructor() ERC20("MixIT Meme", "MIM") {
+        taxReceiver = address(0xC4e2A9f6b1D8E0c3F5a7B9d2E4f6A8c0B3D5e7F);
+        taxBps = 50;
+        burnBps = 25;
+        tradingEnabled = true;
+        isTaxExempt[msg.sender] = true;
