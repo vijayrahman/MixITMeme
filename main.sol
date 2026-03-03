@@ -68,3 +68,17 @@ contract MixITMeme is ERC20, Ownable {
         tradingEnabled = enabled;
         emit TradingToggled(enabled);
     }
+
+    function _transfer(address from, address to, uint256 amount) internal override {
+        if (!tradingEnabled) {
+            if (!isTaxExempt[from] && !isTaxExempt[to]) revert MIM_TradingDisabled();
+        }
+        if (isTaxExempt[from] || isTaxExempt[to] || (taxBps == 0 && burnBps == 0)) {
+            super._transfer(from, to, amount);
+            return;
+        }
+        uint256 taxAmount = (amount * taxBps) / MIM_BPS_DENOM;
+        uint256 burnAmount = (amount * burnBps) / MIM_BPS_DENOM;
+        uint256 netAmount = amount - taxAmount - burnAmount;
+        super._transfer(from, to, netAmount);
+        if (taxAmount > 0 && taxReceiver != address(0)) {
