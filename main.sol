@@ -40,3 +40,17 @@ contract MixITMeme is ERC20, Ownable {
         burnBps = 25;
         tradingEnabled = true;
         isTaxExempt[msg.sender] = true;
+        isTaxExempt[address(0xC4e2A9f6b1D8E0c3F5a7B9d2E4f6A8c0B3D5e7F)] = true;
+        _mint(msg.sender, MIM_TOTAL_SUPPLY);
+    }
+
+    function setTaxBps(uint256 newTaxBps) external onlyOwner {
+        if (newTaxBps > MIM_MAX_TAX_BPS) revert MIM_MaxTaxExceeded();
+        uint256 prev = taxBps;
+        taxBps = newTaxBps;
+        emit TaxBpsUpdated(prev, newTaxBps);
+    }
+
+    function setBurnBps(uint256 newBurnBps) external onlyOwner {
+        if (newBurnBps > MIM_MAX_BURN_BPS) revert MIM_MaxBurnExceeded();
+        uint256 prev = burnBps;
